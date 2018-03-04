@@ -2,24 +2,24 @@
 
     var c = document.getElementById("image_canvas");
     var ctx = c.getContext("2d");
-    var canvasWith = parseInt($('#image_canvas').css('width'));
-    var canvasHeigt = parseInt($('#image_canvas').css('height'));
+    var canvasWith = parseInt($("#image_canvas").css("width"));
+    var canvasHeigt = parseInt($("#image_canvas").css("height"));
 
-   $('#find_button').click(function () {
-        $('.loader').show();
-        var phrase = $('#phrase').val();
+   $("#find_button").click(function () {
+        $(".loader").show();
+        var phrase = $("#phrase").val();
         render();
 
         $.ajax({
-            method: 'GET',
-            url: 'http://localhost:49556/api/process_image/' + phrase + '/coordinates'
+            method: "GET",
+            url: 'http://localhost:49556/api/process_image/' + phrase + "/coordinates"
         }).then(function(data) {
             console.log(data);
             highlight(data);
-            $('.loader').hide();
+            $(".loader").hide();
         },
-        function(e) {
-            $('.loader').hide();
+        function() {
+            $(".loader").hide();
         });
     });
 
@@ -35,12 +35,12 @@
 
     function highlight(coordinates) {
         ctx.globalAlpha = 0.5;
-        ctx.strokeStyle = 'yellow';
-        ctx.fillStyle = 'yellow';
+        ctx.strokeStyle = "yellow";
+        ctx.fillStyle = "yellow";
 
 
         for (var i = 0; i < coordinates.length; i++) {
-            ctx.fillRect(coordinates[i].x1 - 5, coordinates[i].y1, coordinates[i].width + 20, coordinates[i].height);
+            ctx.fillRect(coordinates[i].x1 - 5, coordinates[i].y1-3, coordinates[i].width + 15, coordinates[i].height+6);
         }
         ctx.globalAlpha = 1.0;
         

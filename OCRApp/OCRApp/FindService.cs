@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tesseract;
-
 
 namespace OCRApp
 {
     public class FindService
     { 
-
         private string phrase;
         private Page page;
         private string tempString;
@@ -20,31 +17,7 @@ namespace OCRApp
             var imageWithText = Pix.LoadFromFile(path);
             page = ocrEngine.Process(imageWithText);
         }
-
-        private List<Rect> ChekTempString()
-        {
-            if (tempString == phrase)
-            {
-                var copy = tempCoords;
-                tempString = "";
-                tempCoords = new List<Rect>();
-                return copy;
-            }
-            tempString = "";
-            tempCoords = new List<Rect>();
-            return new List<Rect>();
-        }
-        private List<Rect> ChekWord(string word, Rect coords)
-        {
-            word = word.Trim();
-            if (phrase.Contains(word))
-            {
-                tempString = String.Join(" ", tempString, word).Trim();
-                tempCoords.Add(coords);
-                return new List<Rect>();
-            }
-            return ChekTempString();
-        }
+      
         public List<Dictionary<string, object>> GettCoordinates(string phrase)
         {
             tempString = "";
@@ -78,9 +51,35 @@ namespace OCRApp
                         }
                     } while (iter.Next(PageIteratorLevel.Word));
                 }
-            }   
-
+            }  
+            
             return coords;
+        }
+
+        private List<Rect> ChekTempString()
+        {
+            if (tempString == phrase)
+            {
+                var copy = tempCoords;
+                tempString = "";
+                tempCoords = new List<Rect>();
+                return copy;
+            }
+            tempString = "";
+            tempCoords = new List<Rect>();
+            return new List<Rect>();
+        }
+
+        private IEnumerable<Rect> ChekWord(string word, Rect coords)
+        {
+            word = word.Trim();
+            if (phrase.Contains(word))
+            {
+                tempString = String.Join(" ", tempString, word).Trim();
+                tempCoords.Add(coords);
+                return new List<Rect>();
+            }
+            return ChekTempString();
         }
     }
 }
